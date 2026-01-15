@@ -332,6 +332,10 @@ type Product = {
 
 const products: Product[] = [
   {
+    name: "Escolha o produto",
+    price: 0,
+  },
+  {
     name: "Kit com 3 tampa fralda",
     price: 18.00,
   },
@@ -349,10 +353,12 @@ const products: Product[] = [
   },
 ]
 
+const defaultAmount = '1';
+
 export default function ItemForm() {
   const [itemName, setItemName] = useState('');
   const [price, setPrice] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(defaultAmount);
   const [items, setItems] = useState<Item[]>([]);
   const navigate = useNavigate();
 
@@ -382,7 +388,7 @@ export default function ItemForm() {
     setItems([...items, newItem]);
     setItemName('');
     setPrice('');
-    setAmount('');
+    setAmount(defaultAmount);
   };
 
   const handleRemoveItem = (id: number) => {
@@ -392,6 +398,14 @@ export default function ItemForm() {
   const handlePrintSummary = () => {
     navigate('/print', { state: { items } });
   };
+
+  const handleProductName = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const productName = e.target.value;
+    const value = products.find((p) => p.name === productName)?.price;
+    if (!value) return;
+    setPrice(String(value.toFixed(2)));
+    setItemName(productName);
+  }
 
   const totalItems = items.reduce((sum, item) => sum + item.amount, 0);
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.amount, 0);
@@ -404,13 +418,13 @@ export default function ItemForm() {
         <form onSubmit={handleAddItem}>
           <FormGroup>
             <Label htmlFor="items">Produtos</Label>
-            <SelectionInput>
+            <SelectionInput onChange={(e) => handleProductName(e)}>
               {products.map((product) => ((
                 <option>{product.name}</option>
               )))}
             </SelectionInput>
           </FormGroup>
-          <FormGroup>
+          {/* <FormGroup>
             <Label htmlFor="itemName">Nome do Produto</Label>
             <Input
               id="itemName"
@@ -418,7 +432,7 @@ export default function ItemForm() {
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
             />
-          </FormGroup>
+          </FormGroup> */}
 
           <FormGroup>
             <Label htmlFor="price">Preço</Label>
@@ -438,6 +452,7 @@ export default function ItemForm() {
               id="amount"
               type="number"
               value={amount}
+              defaultValue={Number(amount)}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="1"
             />
