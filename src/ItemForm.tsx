@@ -413,93 +413,93 @@ export default function ItemForm() {
   return (
     <Background>
       <Container>
-      <FormSection>
-        <Title>Adicionar Produtos</Title>
-        <form onSubmit={handleAddItem}>
-          <FormGroup>
-            <Label htmlFor="items">Produtos</Label>
-            <SelectionInput onChange={(e) => handleProductName(e)}>
-              {products.map((product) => ((
-                <option>{product.name}</option>
-              )))}
-            </SelectionInput>
-          </FormGroup>
-          {/* <FormGroup>
-            <Label htmlFor="itemName">Nome do Produto</Label>
-            <Input
-              id="itemName"
-              type="text"
-              value={itemName}
-              onChange={(e) => setItemName(e.target.value)}
-            />
-          </FormGroup> */}
+        <FormSection>
+          <Title>Adicionar Produtos</Title>
+          <form onSubmit={handleAddItem}>
+            <FormGroup>
+              <Label htmlFor="items">Produtos</Label>
+              <SelectionInput onChange={(e) => handleProductName(e)}>
+                {products.map((product) => ((
+                  <option>{product.name}</option>
+                )))}
+              </SelectionInput>
+            </FormGroup>
+            {/* <FormGroup>
+              <Label htmlFor="itemName">Nome do Produto</Label>
+              <Input
+                id="itemName"
+                type="text"
+                value={itemName}
+                onChange={(e) => setItemName(e.target.value)}
+              />
+            </FormGroup> */}
 
-          <FormGroup>
-            <Label htmlFor="price">Preço</Label>
-            <Input
-              id="price"
-              type="number"
-              step="0.01"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.00"
-            />
-          </FormGroup>
+            <FormGroup>
+              <Label htmlFor="price">Preço</Label>
+              <Input
+                id="price"
+                type="number"
+                step="0.01"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="0.00"
+              />
+            </FormGroup>
 
-          <FormGroup>
-            <Label htmlFor="amount">Quantidade</Label>
-            <Input
-              id="amount"
-              type="number"
-              value={amount}
-              defaultValue={Number(amount)}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="1"
-            />
-          </FormGroup>
+            <FormGroup>
+              <Label htmlFor="amount">Quantidade</Label>
+              <Input
+                id="amount"
+                type="number"
+                value={amount}
+                defaultValue={Number(amount)}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="1"
+              />
+            </FormGroup>
 
-          <Button type="submit">Adicionar</Button>
-        </form>
-      </FormSection>
+            <Button type="submit">Adicionar</Button>
+          </form>
+        </FormSection>
 
-      <ListSection>
-        <ListTitle>Produtos</ListTitle>
-        {items.length === 0 ? (
-          <EmptyMessage>Nenhum produto ainda adicionado.</EmptyMessage>
-        ) : (
-          <>
-            <ItemListContainer>
-              {items.map((item) => (
-                <ItemCard key={item.id}>
-                  <ItemInfo>
-                    <ItemName>{item.name}</ItemName>
-                    <ItemDetails>
-                      ${item.price.toFixed(2)} x {item.amount}
-                    </ItemDetails>
-                  </ItemInfo>
-                  <ItemTotal>R${(item.price * item.amount).toFixed(2)}</ItemTotal>
-                  <RemoveButton onClick={() => handleRemoveItem(item.id)}>
-                    Remover
-                  </RemoveButton>
-                </ItemCard>
-              ))}
-            </ItemListContainer>
+        <ListSection>
+          <ListTitle>Produtos</ListTitle>
+          {items.length === 0 ? (
+            <EmptyMessage>Nenhum produto ainda adicionado.</EmptyMessage>
+          ) : (
+            <>
+              <ItemListContainer>
+                {items.map((item) => (
+                  <ItemCard key={item.id}>
+                    <ItemInfo>
+                      <ItemName>{item.name}</ItemName>
+                      <ItemDetails>
+                        ${item.price.toFixed(2)} x {item.amount}
+                      </ItemDetails>
+                    </ItemInfo>
+                    <ItemTotal>R${(item.price * item.amount).toFixed(2)}</ItemTotal>
+                    <RemoveButton onClick={() => handleRemoveItem(item.id)}>
+                      Remover
+                    </RemoveButton>
+                  </ItemCard>
+                ))}
+              </ItemListContainer>
 
-            <SummarySection>
-              <SummaryItem>
-                Total de items: <SummaryValue>{totalItems}</SummaryValue>
-              </SummaryItem>
-              <SummaryItem>
-                Valor total: <SummaryValue>R${totalPrice.toFixed(2)}</SummaryValue>
-              </SummaryItem>
-              <PrintButton onClick={handlePrintSummary} disabled={items.length === 0}>
-                🖨️ Imprimir Resumo
-              </PrintButton>
-            </SummarySection>
-          </>
-        )}
-      </ListSection>
-    </Container>
+              <SummarySection>
+                <SummaryItem>
+                  Total de items: <SummaryValue>{totalItems}</SummaryValue>
+                </SummaryItem>
+                <SummaryItem>
+                  Valor total: <SummaryValue>R${totalPrice.toFixed(2)}</SummaryValue>
+                </SummaryItem>
+                <PrintButton onClick={handlePrintSummary} disabled={items.length === 0}>
+                  🖨️ Imprimir Resumo
+                </PrintButton>
+              </SummarySection>
+            </>
+          )}
+        </ListSection>
+      </Container>
     </Background>
   );
 }
