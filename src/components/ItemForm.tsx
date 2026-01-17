@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
+import { ItemsContext } from '../contexts/ItemsContext/data';
 
 interface Item {
   id: number;
@@ -325,48 +325,19 @@ const PrintButton = styled.button`
   }
 `;
 
-type Product = {
-  name: string;
-  price: number;
-}
-
-const products: Product[] = [
-  {
-    name: "Escolha o produto",
-    price: 0,
-  },
-  {
-    name: "Kit com 3 tampa fralda",
-    price: 18.00,
-  },
-  {
-    name: "Kit com 2 toalhas fraldas",
-    price: 24.00,
-  },
-  {
-    name: "Colcha de berço",
-    price: 38.00,
-  },
-  {
-    name: "Toalhão de fralda com capuz",
-    price: 45.00,
-  },
-]
-
 const defaultAmount = '1';
 
 export default function ItemForm() {
   const [itemName, setItemName] = useState('');
   const [price, setPrice] = useState('');
   const [amount, setAmount] = useState(defaultAmount);
-  const [items, setItems] = useState<Item[]>([]);
-  const navigate = useNavigate();
+  const itemsContext = useContext(ItemsContext);
 
   const handleAddItem = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!itemName.trim() || !price || !amount) {
-      alert('Please fill in all fields');
+      alert('Preencha todos os campos');
       return;
     }
 
@@ -374,7 +345,7 @@ export default function ItemForm() {
     const amountNum = parseInt(amount, 10);
 
     if (priceNum <= 0 || amountNum <= 0) {
-      alert('Price and amount must be greater than 0');
+      alert('Preço e a quantidade precisam ser maiores do que 0');
       return;
     }
 
@@ -385,30 +356,26 @@ export default function ItemForm() {
       amount: amountNum,
     };
 
-    setItems([...items, newItem]);
+    itemsContext.addItem(newItem);
     setItemName('');
     setPrice('');
     setAmount(defaultAmount);
   };
 
-  const handleRemoveItem = (id: number) => {
-    setItems(items.filter((item) => item.id !== id));
-  };
-
-  const handlePrintSummary = () => {
-    navigate('/print', { state: { items } });
-  };
+  // const handlePrintSummary = () => {
+  //   navigate('/print', { state: { items } });
+  // };
 
   const handleProductName = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const productName = e.target.value;
-    const value = products.find((p) => p.name === productName)?.price;
+    const value = itemsContext.items.find((p) => p.name === productName)?.price;
     if (!value) return;
     setPrice(String(value.toFixed(2)));
     setItemName(productName);
   }
 
-  const totalItems = items.reduce((sum, item) => sum + item.amount, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.price * item.amount, 0);
+  const totalItems = itemsContext.items.reduce((sum, item) => sum + item.amount, 0);
+  const totalPrice = itemsContext.items.reduce((sum, item) => sum + item.price * item.amount, 0);
 
   return (
     <Background>
@@ -419,7 +386,7 @@ export default function ItemForm() {
             <FormGroup>
               <Label htmlFor="items">Produtos</Label>
               <SelectionInput onChange={(e) => handleProductName(e)}>
-                {products.map((product) => ((
+                {itemsContext.items.map((product) => ((
                   <option>{product.name}</option>
                 )))}
               </SelectionInput>
@@ -464,12 +431,12 @@ export default function ItemForm() {
 
         <ListSection>
           <ListTitle>Produtos</ListTitle>
-          {items.length === 0 ? (
+          {itemsContext.items.length === 0 ? (
             <EmptyMessage>Nenhum produto ainda adicionado.</EmptyMessage>
           ) : (
             <>
               <ItemListContainer>
-                {items.map((item) => (
+                {itemsContext.items.map((item) => (
                   <ItemCard key={item.id}>
                     <ItemInfo>
                       <ItemName>{item.name}</ItemName>
@@ -478,7 +445,7 @@ export default function ItemForm() {
                       </ItemDetails>
                     </ItemInfo>
                     <ItemTotal>R${(item.price * item.amount).toFixed(2)}</ItemTotal>
-                    <RemoveButton onClick={() => handleRemoveItem(item.id)}>
+                    <RemoveButton onClick={() => itemsContext.removeItem(item.id)}>
                       Remover
                     </RemoveButton>
                   </ItemCard>
@@ -492,7 +459,7 @@ export default function ItemForm() {
                 <SummaryItem>
                   Valor total: <SummaryValue>R${totalPrice.toFixed(2)}</SummaryValue>
                 </SummaryItem>
-                <PrintButton onClick={handlePrintSummary} disabled={items.length === 0}>
+                <PrintButton onClick={() => { alert("Novo método para ser feito") }} disabled={itemsContext.items.length === 0}>
                   🖨️ Imprimir Resumo
                 </PrintButton>
               </SummarySection>

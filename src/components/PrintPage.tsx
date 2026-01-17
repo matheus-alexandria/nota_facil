@@ -1,12 +1,6 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 import styled from 'styled-components';
-
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-  amount: number;
-}
+import { ItemsContext } from '../contexts/ItemsContext/data';
 
 const Background = styled.div`
   display: flex;
@@ -242,20 +236,18 @@ const ActionButtons = styled.div`
 `;
 
 export default function PrintPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const items: Item[] = location.state?.items || [];
+  const itemsContext = useContext(ItemsContext);
 
-  const totalItems = items.reduce((sum, item) => sum + item.amount, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.price * item.amount, 0);
+  const totalItems = itemsContext.items.reduce((sum, item) => sum + item.amount, 0);
+  const totalPrice = itemsContext.items.reduce((sum, item) => sum + item.price * item.amount, 0);
 
   const handlePrint = () => {
     window.print();
   };
 
-  const handleBack = () => {
-    navigate('/');
-  };
+  // const handleBack = () => {
+  //   navigate('/');
+  // };
 
   return (
     <Background>
@@ -266,19 +258,19 @@ export default function PrintPage() {
             <PrintButton onClick={handlePrint}>
               🖨️ Imprimir
             </PrintButton>
-            <BackButton onClick={handleBack}>
+            <BackButton onClick={() => alert("Precisa fazer voltar")}>
               ← Voltar
             </BackButton>
           </ActionButtons>
         </Header>
 
-        {items.length === 0 ? (
+        {itemsContext.items.length === 0 ? (
           <EmptyMessage>Nenhum produto para exibir.</EmptyMessage>
         ) : (
           <>
             <ItemsSection>
               <ItemsTitle>Produtos</ItemsTitle>
-              {items.map((item) => (
+              {itemsContext.items.map((item) => (
                 <ItemLine key={item.id}>
                   <ItemLeft>
                     <ItemName>{item.name}</ItemName>

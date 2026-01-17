@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ItemForm from './ItemForm';
-import PrintPage from './PrintPage';
+import ItemForm from './components/ItemForm';
+import PrintPage from './components/PrintPage';
 
 export default function App() {
   return (
