@@ -1,13 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { Providers } from './contexts';
 import './styles/global.css';
-import { ItemsContextProvider } from './contexts/ItemsContext/Provider';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ItemsContextProvider>
+    <Providers>
       <App />
-    </ItemsContextProvider>
+    </Providers>
   </StrictMode>,
 )
