@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
 import { ItemsContext } from '../contexts/ItemsContext/data';
+import { PathsContext } from '../contexts/PathContext/data';
 
 const Background = styled.div`
   display: flex;
@@ -237,6 +238,7 @@ const ActionButtons = styled.div`
 
 export default function PrintPage() {
   const itemsContext = useContext(ItemsContext);
+  const pathsContext = useContext(PathsContext);
 
   const totalItems = itemsContext.items.reduce((sum, item) => sum + item.amount, 0);
   const totalPrice = itemsContext.items.reduce((sum, item) => sum + item.price * item.amount, 0);
@@ -245,9 +247,9 @@ export default function PrintPage() {
     window.print();
   };
 
-  // const handleBack = () => {
-  //   navigate('/');
-  // };
+  const handleBack = () => {
+    pathsContext.changePath('/');
+  };
 
   return (
     <Background>
@@ -258,7 +260,7 @@ export default function PrintPage() {
             <PrintButton onClick={handlePrint}>
               🖨️ Imprimir
             </PrintButton>
-            <BackButton onClick={() => alert("Precisa fazer voltar")}>
+            <BackButton onClick={handleBack}>
               ← Voltar
             </BackButton>
           </ActionButtons>

@@ -6,6 +6,6 @@ interface PathsContext {
 }
 
 export const PathsContext = createContext<PathsContext>({
-  path: '',
+  path: '/',
   changePath: () => 0
 });

@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ItemsContext } from '../contexts/ItemsContext/data';
+import { PathsContext } from '../contexts/PathContext/data';
 
 interface Item {
   id: number;
@@ -332,6 +333,7 @@ export default function ItemForm() {
   const [price, setPrice] = useState('');
   const [amount, setAmount] = useState(defaultAmount);
   const itemsContext = useContext(ItemsContext);
+  const pathsContext = useContext(PathsContext);
 
   const handleAddItem = (e: React.FormEvent) => {
     e.preventDefault();
@@ -362,13 +364,13 @@ export default function ItemForm() {
     setAmount(defaultAmount);
   };
 
-  // const handlePrintSummary = () => {
-  //   navigate('/print', { state: { items } });
-  // };
+  const handlePrintSummary = () => {
+    pathsContext.changePath("/summary");
+  };
 
   const handleProductName = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const productName = e.target.value;
-    const value = itemsContext.items.find((p) => p.name === productName)?.price;
+    const value = itemsContext.products.find((p) => p.name === productName)?.price;
     if (!value) return;
     setPrice(String(value.toFixed(2)));
     setItemName(productName);
@@ -386,7 +388,7 @@ export default function ItemForm() {
             <FormGroup>
               <Label htmlFor="items">Produtos</Label>
               <SelectionInput onChange={(e) => handleProductName(e)}>
-                {itemsContext.items.map((product) => ((
+                {itemsContext.products.map((product) => ((
                   <option>{product.name}</option>
                 )))}
               </SelectionInput>
@@ -459,7 +461,7 @@ export default function ItemForm() {
                 <SummaryItem>
                   Valor total: <SummaryValue>R${totalPrice.toFixed(2)}</SummaryValue>
                 </SummaryItem>
-                <PrintButton onClick={() => { alert("Novo método para ser feito") }} disabled={itemsContext.items.length === 0}>
+                <PrintButton onClick={handlePrintSummary} disabled={itemsContext.items.length === 0}>
                   🖨️ Imprimir Resumo
                 </PrintButton>
               </SummarySection>
